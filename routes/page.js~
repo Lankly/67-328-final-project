@@ -1,0 +1,4 @@
+exports.homepage = function(request, response){
+    response.sendFile('views/index.html',{root: '~/Dropbox/final_project/'});
+    response.end("");
+}

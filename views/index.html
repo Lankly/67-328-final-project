@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <Title>Homepage</Title>
+
+    <h1>This is the home page</h1>
+  </head>
+
+  <body>
+    <!-- Form to upload a file -->
+    <div>
+      <p>Upload A File:</p>
+      <form action="/upload" enctype="multipart/form-data" method="post">
+	Add a title: <input name="title" type="text" /><br><br>
+	<input multiple="multiple" name="upload" type="file" /><br><br>
+	<input type="submit" value="Upload" /></form>
+    </div>
+    <!-- END file upload form -->
+  </body>
+</html>

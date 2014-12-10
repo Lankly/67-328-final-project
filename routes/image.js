@@ -4,6 +4,8 @@ var randomstring= require('randomstring');
 var path = require('path');
 var formidable = require('formidable');
 var util = require('util');
+var formidable  = require('formidable');
+var webshot = require('webshot');
 
 var mongodburl="mongodb://localhost:27017";
 
@@ -110,5 +112,61 @@ exports.removeImage = function(req,res){
 		}
 	    });
 	}
+    });
+}
+
+exports.takeScreenshot = function(req,res){
+    var form = new formidable.IncomingForm();
+    var url  = "N/A";
+    var file_name = "start";
+    var file_ext  = ".png";
+    form.parse(req,function(err,fields,files){
+	url=fields.title;
+	while(file_name=="start" || fs.exists(file_name+file_ext)){
+	    file_name=randomstring.generate(31);
+	}
+	var temp = "uploads/"+file_name+file_ext;
+	webshot(url,temp,function(err){console.log(err?err:"success");});
+	res.write(temp);
+    });
+
+    form.on('end',function(err,fields,files){	
+	/* Save the filename to the database */
+	MongoClient.connect(mongodburl+"/images",function(err,db){
+	    if(err){return console.log(err);}
+	    else{
+		db.createCollection('uploads',function(err,collection){
+		    if(err){console.log(err);}
+		    else{
+			/*Example of deleting everything in a collection*/
+			/* ---------------------------------------- */
+			/* *** REMOVE THIS IN THE FINAL VERSION *** */
+			/* ---------------------------------------- */
+			//collection.remove({title:title},function(err,res){console.log(err?err:res);});
+
+			collection.insert([{
+			    'title':url,
+			    'file':file_name,
+			    'ext' :file_ext,
+			    'tags':[]
+			}],function(err,result){console.log(err?err:"insert successful");});
+			
+			/* Example of a find query and iterating over it */
+			collection.find({title:url},function(err,cursor){
+			    if(err){console.log(err);}
+			    else{
+				console.log("All Documents with"+url+" as the title...");
+				cursor.each(function(err,result){console.log(err?err:result?result:"done");});
+			    }
+			});
+			
+			db.close();
+
+			res.write(" <a href=\'http://localhost:50000/uploads/"+file_name+"\'>Click here</a>");
+			res.end();
+		    }
+		});
+	    }
+	});
     });
 }

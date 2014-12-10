@@ -1,6 +1,8 @@
 var path = require('path');
 var fs   = require('fs');
 var MongoClient = require('mongodb').MongoClient;
+var webshot     = require('webshot');
+var formidable  = require('formidable');
 
 exports.homepage = function(request, response){
     console.log('views/index.html',{root: path.resolve(__dirname,'../')});
@@ -25,4 +27,9 @@ exports.imagePage = function(req,res){
 	    });
 	}
     });
+}
+
+exports.takeScreenshotPage = function(req,res){
+    res.render('takeScreenshot',{});
+    res.end();
 }

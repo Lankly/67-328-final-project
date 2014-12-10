@@ -9,7 +9,7 @@
           url: '/remove/<%=file%>',
           type:'DELETE',
           success: function(res){
-            $("#info_zone").html(res);
+            $("#info_zone").html(res+"<a href='/'>Go back</a>");
           }
         });
       }

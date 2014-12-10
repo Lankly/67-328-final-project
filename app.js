@@ -34,7 +34,14 @@ app.get("/images/:file",function(request,response){
 //File page GET
 app.get("/uploads/:file",pageRoutes.imagePage);
 
+//File DELETE
 app.delete("/remove/:file",imageRoutes.removeImage);
+
+//Screenshot page GET
+app.get("/screenshot",pageRoutes.takeScreenshotPage);
+
+//Screenshot page POST
+app.post("/takess",imageRoutes.takeScreenshot);
 
 app.listen(port_num);
 console.log("Server lisening on port "+port_num);

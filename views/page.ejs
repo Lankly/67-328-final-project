@@ -1,2 +1,25 @@
 <!DOCTYPE HTML>
-<p>It works! /images/<%=file%> <img src="/images/<%=file%>"></p>
+<html>
+  <head>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+      function deleteImage(){
+        console.log("Check");
+        $.ajax({
+          url: '/remove/<%=file%>',
+          type:'DELETE',
+          success: function(res){
+            $("#info_zone").html(res);
+          }
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    <p>It works! /images/<%=file%> <img src="/images/<%=file%>"></p>
+    <br>
+    <button id="remove" onclick="deleteImage()">Delete this image</button>
+    <p id="info_zone"></p>
+  </body>
+</html>

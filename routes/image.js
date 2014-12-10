@@ -5,6 +5,8 @@ var path = require('path');
 var formidable = require('formidable');
 var util = require('util');
 
+var mongodburl="mongodb://localhost:27017";
+
 // Does not work because response.sendFile won't send from here
 exports.getImage = function(request,response){
     if(request.params.file==null){response.end("Invalid file name!");}
@@ -15,8 +17,6 @@ exports.getImage = function(request,response){
 	response.end(pathToFile);
     }
 }
-
-
 
 exports.uploadImage = function(req,res){
     var form = new formidable.IncomingForm();
@@ -51,7 +51,7 @@ exports.uploadImage = function(req,res){
 	});
 
 	/* Save the filename to the database */
-	MongoClient.connect("mongodb://localhost:27017/images",function(err,db){
+	MongoClient.connect(mongodburl+"/images",function(err,db){
 	    if(err){return console.log(err);}
 	    else{
 		db.createCollection('uploads',function(err,collection){
@@ -79,16 +79,36 @@ exports.uploadImage = function(req,res){
 			    }
 			});
 			
-			res.write(" <a href=\'http://localhost:50000/images/"+file_name+file_ext+"\'>Click here</a>");
+			db.close();
+
+			res.write(" <a href=\'http://localhost:50000/uploads/"+file_name+"\'>Click here</a>");
 			res.end();
 		    }
 		});
 	    }
 	});
-
     });
 }
 
 exports.removeImage = function(req,res){
-    
+    MongoClient.connect(mongodburl+"/images",function(err,db){
+	if(err){console.log(err);}
+	else{
+	    db.createCollection('uploads',function(err,collection){
+		if(err){console.log(err);}
+		else{
+		    var temp = req.params.file.substring(0,req.params.file.indexOf("."));
+		    collection.remove({"file":temp},function(err,doc){
+		    if(!doc){console.log(req.params.file);res.end("Something went wrong removing "+req.params.file);}
+		    else{
+			temp=__dirname+"/../uploads/"+req.params.file;
+			console.log("TEMP: "+temp);
+			fs.unlink(temp);
+			res.write("You have removed a file.");res.end();}
+			db.close();
+		    });
+		}
+	    });
+	}
+    });
 }

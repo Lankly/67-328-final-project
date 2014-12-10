@@ -8,7 +8,6 @@ exports.homepage = function(request, response){
 }
 
 exports.imagePage = function(req,res){
-    console.log("----_CHECK_-----");
     MongoClient.connect("mongodb://localhost:27017/images",function(err,db){
 	if(err){console.log(err);}
 	else{

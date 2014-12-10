@@ -34,5 +34,7 @@ app.get("/images/:file",function(request,response){
 //File page GET
 app.get("/uploads/:file",pageRoutes.imagePage);
 
+app.delete("/remove/:file",imageRoutes.removeImage);
+
 app.listen(port_num);
 console.log("Server lisening on port "+port_num);

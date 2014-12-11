@@ -121,7 +121,8 @@ exports.takeScreenshot = function(req,res){
     var file_name = "start";
     var file_ext  = ".png";
     form.parse(req,function(err,fields,files){
-	url=fields.title;
+	url=fields.url;
+	if(!url){console.log(util.inspect({fields:fields,files:files}));}
 	while(file_name=="start" || fs.exists(file_name+file_ext)){
 	    file_name=randomstring.generate(31);
 	}
